@@ -39,7 +39,9 @@ loquor-sign
   mongod
   cd backend
   go run .
+  ```
 
   ### Frontend
   ```bash
   EM BREVE
+  ```
