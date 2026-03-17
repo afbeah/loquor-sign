@@ -18,3 +18,15 @@ func GetSymbols (c echo.Context) error {
 	return c.JSON(http.StatusOK, symbols)
 
 }
+
+func CreateSymbol (c echo.Context) error{
+	var symbol models.Symbol
+
+	if err := c.Bind(&symbol); err != nil{
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "dados inválidos",
+		})
+	}
+
+	return c.JSON(http.StatusCreated, symbol)
+}
