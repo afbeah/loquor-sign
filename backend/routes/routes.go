@@ -1,0 +1,10 @@
+package routes
+
+import (
+	"github.com/labstack/echo/v4"
+  "loquor-sign/handlers"
+)
+
+func InitRoutes(e *echo.Echo){
+	e.GET("/symbols", handlers.GetSymbols)
+}

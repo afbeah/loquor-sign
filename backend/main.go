@@ -3,11 +3,15 @@ package main
 import (
 	"net/http"
 	"github.com/labstack/echo/v4"
+
+	"loquor-sign/routes"
 )
 
 func main() {
 
 	e := echo.New()
+
+	routes.InitRoutes(e)
 
 	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{
