@@ -1,10 +1,14 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
+	"time"
+
+	"loquor-sign/database"
+	"loquor-sign/models"
 	
 	"github.com/labstack/echo/v4"
-  "loquor-sign/models"
 )
 
 var symbols = []models.Symbol{
@@ -26,7 +30,17 @@ func CreateSymbol (c echo.Context) error{
 		})
 	}
 
-	symbols = append(symbols, symbol)
+	collection := database.DB.Collection("symbols")
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := collection.InsertOne(ctx, symbol)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "erro ao salvar no banco",
+		})
+	}
 
 	return c.JSON(http.StatusCreated, symbol)
 }
