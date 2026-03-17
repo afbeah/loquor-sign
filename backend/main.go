@@ -5,10 +5,12 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"loquor-sign/routes"
+	"loquor-sign/database"
 )
 
 func main() {
 
+	database.Connect()
 	e := echo.New()
 
 	routes.InitRoutes(e)
