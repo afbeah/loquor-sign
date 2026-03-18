@@ -7,15 +7,16 @@ import (
 
 	"loquor-sign/database"
 	"loquor-sign/models"
-	
+
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var symbols = []models.Symbol{
-		{ID:"1", Name:"Água", Image:"agua.png", Category_ID:"1"},
-		{ID:"2", Name:"Comer", Image:"comer.png", Category_ID:"2"},
-		{ID:"3", Name:"Dormir", Image:"dormir.png", Category_ID:"3"},
+		{Name:"Água", Image:"agua.png", CategoryID:"1"},
+		{Name:"Comer", Image:"comer.png", CategoryID:"2"},
+		{Name:"Dormir", Image:"dormir.png", CategoryID:"3"},
 	}
 
 func GetSymbols(c echo.Context) error {
@@ -60,15 +61,17 @@ func CreateSymbol (c echo.Context) error{
 
 	collection := database.DB.Collection("symbols")
 
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err := collection.InsertOne(ctx, symbol)
+	result, err := collection.InsertOne(ctx, symbol)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": "erro ao salvar no banco",
 		})
 	}
+
+	symbol.ID = result.InsertedID.(primitive.ObjectID)
 
 	return c.JSON(http.StatusCreated, symbol)
 }
@@ -86,6 +89,13 @@ func UpdateSymbol (c echo.Context) error{
 
 	collection := database.DB.Collection("symbols")
 
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "id inválido",
+		})
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -93,11 +103,11 @@ func UpdateSymbol (c echo.Context) error{
 		"$set": bson.M{
 			"name": updateSymbol.Name,
 			"image": updateSymbol.Image,
-			"category_id": updateSymbol.Category_ID,
+			"category_id": updateSymbol.CategoryID,
 		},
 	}
 
-	result, err := collection.UpdateOne(ctx, bson.M{"id": id}, update)
+	result, err := collection.UpdateOne(ctx, bson.M{"_id": objectID}, update)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": "erro ao atualizar símbolo",
@@ -116,12 +126,19 @@ func UpdateSymbol (c echo.Context) error{
 func DeleteSymbol (c echo.Context) error{
 	id := c.Param("id")
 
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "id inválido",
+		})
+	}
+
 	collection := database.DB.Collection("symbols")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := collection.DeleteOne(ctx, bson.M{"id": id})
+	result, err := collection.DeleteOne(ctx, bson.M{"_id": objectID})
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": "erro ao deletar símbolo",

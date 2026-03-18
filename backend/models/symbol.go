@@ -1,8 +1,12 @@
 package models
 
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 type Symbol struct{
-	ID string `json: "id"`
-	Name string `json: "name"`
-	Image string `json: "image"`
-	Category_ID string `json: "category_id"`
+	ID primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Name string `bson:"name" json:"name"`
+	Image string `bson:"image" json:"image"`
+	CategoryID string `bson:"categoryid" json:"categoryid"`
 }
