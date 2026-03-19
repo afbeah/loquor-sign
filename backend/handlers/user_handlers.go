@@ -7,6 +7,7 @@ import(
 
 	"loquor-sign/database"
 	"loquor-sign/models"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
@@ -42,6 +43,12 @@ func GetUser (c echo.Context) error {
 		users = append(users, user)
 	}
 
+	if err := cursor.Err(); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "erro ao iterar usuário",
+		})
+	}
+
 	return c.JSON(http.StatusOK, users)
 }
 
@@ -53,6 +60,15 @@ func CreateUser(c echo.Context) error {
 			"error": "dados inválidos",
 		})
 	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "erro ao criptografar senha",
+		})
+	}
+
+	user.Password = string(hashedPassword)
 
 	collection := database.DB.Collection("users")
 
@@ -68,7 +84,13 @@ func CreateUser(c echo.Context) error {
 
 	user.ID = result.InsertedID.(primitive.ObjectID)
 
-	return c.JSON(http.StatusCreated, user)
+	response := models.UserResponse{
+		ID: user.ID,
+		Name: user.Name,
+		Email: user.Email,
+	}
+
+	return c.JSON(http.StatusCreated, response)
 
 }
 
@@ -117,7 +139,43 @@ func UpdateUser (c echo.Context) error{
 	}
 
 	updateUser.ID = objectID
+	updateUser.Password = ""
 	return c.JSON(http.StatusOK, updateUser)
+}
+
+func Login(c echo.Context) error {
+	var loginData struct {
+		Email string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := c.Bind(&loginData); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "dados inválidos",
+		})
+	}
+
+	collection := database.DB.Collection("users")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var user models.User
+
+	err := collection.FindOne(ctx, bson.M{"email": loginData.Email}).Decode(&user)
+	if err != nil{
+		return c.JSON(http.StatusUnauthorized, map[string]string{
+			"error": "usuário ou senha inválida",
+		})
+	}
+
+	response := models.UserResponse{
+		ID: user.ID,
+		Name: user.Name,
+		Email: user.Email,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func DeleteUser (c echo.Context) error{
@@ -144,7 +202,7 @@ func DeleteUser (c echo.Context) error{
 
 	if result.DeletedCount == 0 {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "usuário não encontrada",
+			"error": "usuário não encontrado",
 		})
 	}
 
