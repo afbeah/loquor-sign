@@ -169,6 +169,13 @@ func Login(c echo.Context) error {
 		})
 	}
 
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginData.Password))
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{
+			"error": "usuário ou senha inválida",
+		})
+	}
+
 	response := models.UserResponse{
 		ID: user.ID,
 		Name: user.Name,

@@ -12,7 +12,7 @@ func InitRoutes(e *echo.Echo){
 	e.POST("/symbols", handlers.CreateSymbol)
 	e.POST("/categories", handlers.CreateCategory)
 	e.POST("/users", handlers.CreateUser)
-	e.POST("/login", handlers,Login)
+	e.POST("/login", handlers.Login)
 	e.PUT("/symbols/:id", handlers.UpdateSymbol)
 	e.PUT("/categories/:id", handlers.UpdateCategory)
 	e.PUT("/users/:id", handlers.UpdateUser)
