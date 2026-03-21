@@ -60,6 +60,8 @@ func CreatePhrase(c echo.Context) error {
 		})
 	}
 
+	phrase.CreatedAt = time.Now()
+
 	collection := database.DB.Collection("phrases")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
