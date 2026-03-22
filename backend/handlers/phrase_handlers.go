@@ -52,22 +52,43 @@ func GetPhrase (c echo.Context) error {
 }
 
 func CreatePhrase(c echo.Context) error {
-	var phrase models.Phrase
+	var req models.PhraseRequest
 
-	if err := c.Bind(&phrase); err != nil {
+	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
 			"error": "dados inválidos",
 		})
 	}
 
-	phrase.CreatedAt = time.Now()
+	userID, err := primitive.ObjectIDFromHex(req.UserID)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "user_id inválido",
+		})
+	}
+
+	var symbols []primitive.ObjectID
+	for _, s := range req.Symbols{
+		objID, err := primitive.ObjectIDFromHex(s)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{
+				"error": "symbol_id inválido",
+			})
+		}
+
+		symbols = append(symbols, objID)
+	}
+
+	phrase := models.Phrase{
+		UserID: userID,
+		Symbols: symbols,
+		CreatedAt: time.Now(),
+	}
 
 	collection := database.DB.Collection("phrases")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
-	phrase.CreatedAt = time.Now()
 
 	result, err := collection.InsertOne(ctx, phrase)
 	if err != nil {
