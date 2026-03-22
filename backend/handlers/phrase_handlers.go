@@ -60,7 +60,9 @@ func CreatePhrase(c echo.Context) error {
 		})
 	}
 
-	userID, err := primitive.ObjectIDFromHex(req.UserID)
+	userIDFromToken := c.Get("user_id").(string)
+
+	userID, err := primitive.ObjectIDFromHex(userIDFromToken)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
 			"error": "user_id inválido",

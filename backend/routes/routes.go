@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/labstack/echo/v4"
   "loquor-sign/handlers"
+	"loquor-sign/middleware"
 )
 
 func InitRoutes(e *echo.Echo){
@@ -10,12 +11,14 @@ func InitRoutes(e *echo.Echo){
 	e.GET("/categories", handlers.GetCategory)
 	e.GET("/users", handlers.GetUser)
 	e.GET("/phrases", handlers.GetPhrase)
+	e.GET("/phrases", handlers.GetPhrase, middleware.JWTMiddleware)
 
 	e.POST("/symbols", handlers.CreateSymbol)
 	e.POST("/categories", handlers.CreateCategory)
 	e.POST("/users", handlers.CreateUser)
 	e.POST("/login", handlers.Login)
 	e.POST("/phrases", handlers.CreatePhrase)
+	e.POST("/phrases", handlers.CreatePhrase, middleware.JWTMiddleware)
 
 	e.PUT("/symbols/:id", handlers.UpdateSymbol)
 	e.PUT("/categories/:id", handlers.UpdateCategory)

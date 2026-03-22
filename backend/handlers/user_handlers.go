@@ -177,7 +177,7 @@ func Login(c echo.Context) error {
 		})
 	}
 
-		token := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.MapClaims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": user.ID.Hex(),
 		"exp": time.Now().Add(time.Hour * 24).Unix(),
 	})
@@ -197,7 +197,7 @@ func Login(c echo.Context) error {
 		},
 		"token": tokenString,
 	})
-	
+
 }
 
 func DeleteUser (c echo.Context) error{
