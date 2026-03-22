@@ -12,6 +12,7 @@ import(
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"github.com/golang-jwt/jwt/v5"
 
 )
 
@@ -176,13 +177,27 @@ func Login(c echo.Context) error {
 		})
 	}
 
-	response := models.UserResponse{
-		ID: user.ID,
-		Name: user.Name,
-		Email: user.Email,
+		token := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.MapClaims{
+		"user_id": user.ID.Hex(),
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+	})
+
+	tokenString, err := token.SignedString([]byte("sua_chave_secreta"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "erro ao gerar token",
+		})
 	}
 
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"user": models.UserResponse{
+			ID: user.ID,
+			Name: user.Name,
+			Email: user.Email,
+		},
+		"token": tokenString,
+	})
+	
 }
 
 func DeleteUser (c echo.Context) error{

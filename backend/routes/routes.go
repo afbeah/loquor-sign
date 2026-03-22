@@ -26,4 +26,6 @@ func InitRoutes(e *echo.Echo){
 	e.DELETE("/categories/:id", handlers.DeleteCategory)
 	e.DELETE("/users/:id", handlers.DeleteUser)
 	e.DELETE("/phrases/:id", handlers.DeletePhrase)
+	e.DELETE("/reset/phrases", handlers.ResetPhrases)
 }
+

@@ -183,3 +183,22 @@ func DeletePhrase (c echo.Context) error{
 		"message": "frase deletada com sucesso",
 	})
 }
+
+func ResetPhrases(c echo.Context) error {
+	collection := database.DB.Collection("phrases")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := collection.DeleteMany(ctx, bson.M{})
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "erro ao limpar frases",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"message":"frases resetadas com sucesso",
+	})
+
+}
