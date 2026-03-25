@@ -15,6 +15,11 @@ export const api = {
     return response.json()
   },
 
+  getSymbols: async () => {
+    const response = await fetch(`${API_URL}/symbols`);
+    return response.json();
+  },
+
   getPhrases: async () => {
     const response = await fetch(`${API_URL}/phrases`, {
       method: "GET",
