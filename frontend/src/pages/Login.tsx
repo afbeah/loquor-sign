@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { api } from "../services/Api";
+import { api } from "../services/api";
+import { setToken } from "../utils/auth"
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ export function Login() {
 
     console.log("Resposta:", data);
 
-    localStorage.setItem("token", data.token);
+    setToken(data.token)
   };
 
   return (
