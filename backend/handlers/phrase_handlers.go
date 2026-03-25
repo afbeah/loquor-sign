@@ -20,7 +20,16 @@ func GetPhrase (c echo.Context) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	cursor, err := collection.Find(ctx, bson.M{})
+	userIDFromToken := c.Get("user_id").(string)
+
+	userID, err := primitive.ObjectIDFromHex(userIDFromToken)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "user_id inválido",
+		})
+	}
+
+	cursor, err := collection.Find(ctx, bson.M{"user_id": userID})
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": "erro ao buscar frases",

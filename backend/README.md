@@ -47,11 +47,83 @@ backend
  ├── models
  ├── routes
  ├── database
+ ├── middleware
  └── main.go
 
 ---
 
+## 🔐 Autenticação
+
+A API utiliza autenticação via JWT.
+
+### 🔐 Login
+
+POST /login
+
+### 📥 Body
+
+JSON
+{
+  "email": "usuario@gmail.com",
+  "password": "123456"
+}
+
+### 📥 Resposta
+
+JSON
+{
+  "user":{
+    "id":"INCLUIR_ID_AQUI",
+    "name":"Usuário",
+    "email":"usuário@gmail.com"
+  },
+  "token":"JWT_TOKEN"
+
+}
+
+### 🔒 Rotas Protegidas
+
+As rotas de phrases exigem autenticação.
+
+Enviar no header:
+
+`Authorization: Bearer SEU_TOKEN`
+
+---
+
 ## 📡 Rotas da API
+
+### 👤 USERS
+
+🔹 POST /users
+- Cria um novo usuário.
+
+📥 Body
+{
+  "name": "Bartolomeu",
+  "email": "Barto@gmail.com",
+  "password": "123456"
+}
+
+### 🗂 CATEGORIES
+
+🔹 GET /categories
+- Listar todas as categorias
+
+🔹 POST /categories
+- Criar uma categoria
+JSON
+{
+  "name": "Ações"
+}
+
+🔹 PUT /categories/:id
+- Atualiza uma categoria
+
+🔹 DELETE /categories
+- Remove um categoria
+
+### 🔤 SYMBOLS
 
 🔹 GET /symbols
 - Retorna todos os símbolos.
@@ -76,6 +148,7 @@ backend
   "image": "beber.png",
   "category_id": "1"
 }
+
 ✅ Resposta
 {
   "id": "4",
@@ -109,3 +182,38 @@ backend
 {
   "message": "símbolo deletado com sucesso"
 }
+
+### 🧩 PHRASES (🔒 protegidas)
+
+🔹 GET /phrases
+- Lista frases do usuário autenticado
+
+🔹 POST /phrases
+JSON
+{
+  "symbols": ["ID_SYMBOLS_1", "ID_SYMBOLS_2"]
+}
+
+🔹 PUT /phrases/:id
+- Atualizar uma frase
+
+🔹 DELETE /phrases/:id
+- Remove uma frase
+
+---
+
+## 🧪 Observações importantes
+- IDs são gerados automaticamente pelo 
+- MongoDB (ObjectID)
+- Não é necessário enviar id no body
+- Senhas são armazenadas com hash (bcrypt)
+- Cada usuário acessa apenas suas próprias frases
+
+---
+
+## 📌 Status do Projeto
+
+🚧 Protótipo funcional
+✅ CRUD completo
+✅ Autenticação com JWT
+✅ Integração com MongoDB
