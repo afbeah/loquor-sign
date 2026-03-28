@@ -10,20 +10,24 @@ type Symbol = {
 
 export function Symbols() {
   const [symbols, setSymbols] = useState<Symbol[]>([]);
+  const [phrase, setPhrase] = useState<Symbol[]>([]);
 
   useEffect(() => {
     async function loadSymbols() {
+      try {
       const data = await api.getSymbols();
       console.log("Symbols:", data);
       setSymbols(data);
+      } catch (error) {
+        console.error("Erro ao buscar símbolo:", error);
+      }
     }
 
     loadSymbols();
   }, []);
 
-  const [phrase, setPhrase] = useState<Symbol[]>([]);
-
   function addToPhrase(symbol: Symbol) {
+    console.log("Símbolo clivado:", symbol);
     setPhrase((prev) => [...prev, symbol])
   }
 
@@ -32,20 +36,35 @@ export function Symbols() {
       <h2>Symbols</h2>
 
       <h3>Frase:</h3>
-
-      <div>
-        {phrase.map((symbol, index) => (
-          <span key={index} style={{ marginRight: 8 }}>
-            {symbol.name}
-          </span>
-        ))}
+      <div style={{ marginBottom: 20}}>
+        {phrase.length === 0 ? (
+          <p>Nenhum símbolo selecionado ainda.</p>
+        ) : (
+          phrase.map((symbol, index) => (
+            <span key={index} style={{ marginRight: 8 }}>
+              {symbol.name}
+            </span>
+          ))
+        )}
       </div>
 
-      {symbols.map((symbol) => (
-        <div key={symbol.id} onClick={() => addToPhrase(symbol)}>
-          <p>{symbol.name}</p>
-        </div>
-      ))}
+      <h3>Lista de Símbolos</h3>
+      <div>
+        {symbols.length === 0 ? (
+          <p>Nenhum símbolo carregado.</p>
+        ) : (
+          symbols.map((symbol) => (
+            <div key={symbol.id} onClick={() => addToPhrase(symbol)} style={{
+              border: "1px solid gray",
+              padding: 10,
+              marginBottom: 10,
+              cursor: "pointer",
+            }}>
+              <p>{symbol.name}</p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   )
 }
