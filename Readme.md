@@ -43,5 +43,6 @@ loquor-sign
 
   ### Frontend
   ```bash
-  EM BREVE
+  cd frontend
+  npm run dev
   ```
