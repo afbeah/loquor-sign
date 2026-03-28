@@ -1,17 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
-import { setToken } from "../utils/auth"
+import { setToken } from "../utils/auth";
+
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     const data = await api.login(email, password);
 
     console.log("Resposta:", data);
 
-    setToken(data.token)
+    setToken(data.token);
+    navigate("/symbols");
   };
 
   return (
