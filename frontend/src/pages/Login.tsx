@@ -17,6 +17,7 @@ export function Login() {
 
     setToken(data.token);
     navigate("/symbols");
+    navigate("/menu");
   };
 
   return (
