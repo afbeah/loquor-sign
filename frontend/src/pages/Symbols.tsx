@@ -11,7 +11,7 @@ type Symbol = {
 type SavedPhrase = {
   id: string;
   user_id?: string;
-  symbols: string;
+  symbols: string[];
   created_at?: string;
 }
 
@@ -70,6 +70,14 @@ export function Symbols() {
     }
   }
 
+  function getSymbolNames(symbolIds: string[]) {
+    return symbolIds.map((id) => {
+      const symbol = symbols.find((symbol) => symbol.id === id);
+      return symbol ? symbol.name : "Símbolo não encontrado";
+    })
+    .join(" ");
+  }
+
   return (
     <div>
       <h2>Symbols</h2>
@@ -115,17 +123,17 @@ export function Symbols() {
           savedPhrases.map((phrase, index) => (
             <div key={phrase.id || index}
             style={{
-              border: "1px dolid gray",
+              border: "1px solid gray",
               padding: 10,
               marginBottom: 10,
             }}>
               <p><strong>ID:</strong> {phrase.id}</p>
-              <p><strong>Quantidade de símbolos:</strong> {phrase.symbols?.length}</p>
+              <p><strong>Frase:</strong> {getSymbolNames(phrase.symbols)}</p>
             </div>
           ))
         )}
       </div>
 
     </div>
-  )
+  );
 }
