@@ -29,6 +29,21 @@ export const api = {
     });
 
     return response.json();
+  },
+
+  createPhrase: async (symbolIds: string[]) => {
+    const response = await fetch("http://localhost:8080/phrases", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        symbols: symbolIds, 
+      }),
+    });
+
+    return response.json();
   }
 
 }

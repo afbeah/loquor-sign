@@ -31,6 +31,20 @@ export function Symbols() {
     setPhrase((prev) => [...prev, symbol])
   }
 
+  async function handleSavePhrase() {
+    try {
+      const symbolIds = phrase.map((symbol) => symbol.id);
+
+      console.log("Enviando frase:", symbolIds);
+
+      const response = await api.createPhrase(symbolIds);
+
+      console.log("Frase salva:", response);
+    } catch (error) {
+      console.error("Erro ao salvar frase:", error);
+    }
+  }
+
   return (
     <div>
       <h2>Symbols</h2>
@@ -47,6 +61,8 @@ export function Symbols() {
           ))
         )}
       </div>
+
+      <button onClick={handleSavePhrase}>Salvar frase</button>
 
       <h3>Lista de Símbolos</h3>
       <div>
