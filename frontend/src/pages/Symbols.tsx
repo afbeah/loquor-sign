@@ -8,22 +8,44 @@ type Symbol = {
   category_id?: string;
 }
 
+type SavedPhrase = {
+  id: string;
+  user_id?: string;
+  symbols: string;
+  created_at?: string;
+}
+
 export function Symbols() {
   const [symbols, setSymbols] = useState<Symbol[]>([]);
   const [phrase, setPhrase] = useState<Symbol[]>([]);
+  const [savedPhrases, setSavedPhrases] = useState<SavedPhrase[]>([]);
+
+  async function loadPhrases() {
+    try {
+      const data = await api.getPhrases();
+      console.log("Frases salvas:", data);
+      setSavedPhrases(data);
+    } catch (error) {
+      console.log("Erro ao buscar frases:", error)
+    }
+  }
 
   useEffect(() => {
-    async function loadSymbols() {
+    async function loadData() {
       try {
-      const data = await api.getSymbols();
-      console.log("Symbols:", data);
-      setSymbols(data);
+      const symbolsData = await api.getSymbols();
+      console.log("Symbols:", symbolsData);
+      setSymbols(symbolsData);
+
+      const phrasesData = await api.getPhrases();
+      console.log("Frases salvas:", phrasesData);
+      setSavedPhrases(phrasesData)
       } catch (error) {
         console.error("Erro ao buscar símbolo:", error);
       }
     }
 
-    loadSymbols();
+    loadData();
   }, []);
 
   function addToPhrase(symbol: Symbol) {
@@ -40,6 +62,9 @@ export function Symbols() {
       const response = await api.createPhrase(symbolIds);
 
       console.log("Frase salva:", response);
+
+      setPhrase([]);
+      await loadPhrases();
     } catch (error) {
       console.error("Erro ao salvar frase:", error);
     }
@@ -81,6 +106,26 @@ export function Symbols() {
           ))
         )}
       </div>
+
+      <h3>Frases salvas</h3>
+      <div>
+        {savedPhrases.length === 0 ? (
+          <p>Nenhuma frase salva ainda.</p>
+        ) : (
+          savedPhrases.map((phrase, index) => (
+            <div key={phrase.id || index}
+            style={{
+              border: "1px dolid gray",
+              padding: 10,
+              marginBottom: 10,
+            }}>
+              <p><strong>ID:</strong> {phrase.id}</p>
+              <p><strong>Quantidade de símbolos:</strong> {phrase.symbols?.length}</p>
+            </div>
+          ))
+        )}
+      </div>
+
     </div>
   )
 }
