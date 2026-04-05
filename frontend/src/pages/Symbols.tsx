@@ -8,28 +8,9 @@ type Symbol = {
   category_id?: string;
 }
 
-type SavedPhrase = {
-  id: string;
-  user_id?: string;
-  symbols: string[];
-  created_at?: string;
-}
-
 export function Symbols() {
   const [symbols, setSymbols] = useState<Symbol[]>([]);
   const [phrase, setPhrase] = useState<Symbol[]>([]);
-  const [savedPhrases, setSavedPhrases] = useState<SavedPhrase[]>([]);
-
-  async function loadPhrases() {
-    try {
-      const data = await api.getPhrases();
-      console.log("Frases salvas:", data);
-      setSavedPhrases(data);
-    } catch (error) {
-      console.log("Erro ao buscar frases:", error)
-    }
-  }
-
   useEffect(() => {
     async function loadData() {
       try {
@@ -37,9 +18,6 @@ export function Symbols() {
       console.log("Symbols:", symbolsData);
       setSymbols(symbolsData);
 
-      const phrasesData = await api.getPhrases();
-      console.log("Frases salvas:", phrasesData);
-      setSavedPhrases(phrasesData)
       } catch (error) {
         console.error("Erro ao buscar símbolo:", error);
       }
@@ -49,11 +27,15 @@ export function Symbols() {
   }, []);
 
   function addToPhrase(symbol: Symbol) {
-    console.log("Símbolo clivado:", symbol);
+    console.log("Símbolo clicado:", symbol);
     setPhrase((prev) => [...prev, symbol])
   }
 
   async function handleSavePhrase() {
+    if (phrase.length === 0) {
+      alert("Selecione pelo menos um símbolo antes de salvar.");
+      return;
+    }
     try {
       const symbolIds = phrase.map((symbol) => symbol.id);
 
@@ -64,18 +46,9 @@ export function Symbols() {
       console.log("Frase salva:", response);
 
       setPhrase([]);
-      await loadPhrases();
     } catch (error) {
       console.error("Erro ao salvar frase:", error);
     }
-  }
-
-  function getSymbolNames(symbolIds: string[]) {
-    return symbolIds.map((id) => {
-      const symbol = symbols.find((symbol) => symbol.id === id);
-      return symbol ? symbol.name : "Símbolo não encontrado";
-    })
-    .join(" ");
   }
 
   return (
@@ -110,25 +83,6 @@ export function Symbols() {
               cursor: "pointer",
             }}>
               <p>{symbol.name}</p>
-            </div>
-          ))
-        )}
-      </div>
-
-      <h3>Frases salvas</h3>
-      <div>
-        {savedPhrases.length === 0 ? (
-          <p>Nenhuma frase salva ainda.</p>
-        ) : (
-          savedPhrases.map((phrase, index) => (
-            <div key={phrase.id || index}
-            style={{
-              border: "1px solid gray",
-              padding: 10,
-              marginBottom: 10,
-            }}>
-              <p><strong>ID:</strong> {phrase.id}</p>
-              <p><strong>Frase:</strong> {getSymbolNames(phrase.symbols)}</p>
             </div>
           ))
         )}
