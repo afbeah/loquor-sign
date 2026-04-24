@@ -3,6 +3,7 @@ import { Symbols } from "./pages/Symbols";
 import { Menu } from "./pages/Menu";
 import { Phrases } from "./pages/Phrases";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {} from "./App.css"
 
 function App() {
   return (

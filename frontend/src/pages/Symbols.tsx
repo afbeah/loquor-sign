@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"; 
 import { api } from "../services/api";
+import { useNavigate } from "react-router-dom";
+
 
 type Symbol = {
   id: string;
@@ -11,12 +13,28 @@ type Symbol = {
 export function Symbols() {
   const [symbols, setSymbols] = useState<Symbol[]>([]);
   const [phrase, setPhrase] = useState<Symbol[]>([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function loadData() {
       try {
       const symbolsData = await api.getSymbols();
       console.log("Symbols:", symbolsData);
-      setSymbols(symbolsData);
+      
+      if (Array.isArray(symbolsData)) {
+        setSymbols(symbolsData);
+      } else {
+        setSymbols([
+          {id: "1", name:"Eu"},
+          {id: "2", name:"Quero"},
+          {id: "3", name:"Estou"},
+          {id: "4", name:"Água"},
+          {id: "5", name:"Comer"},
+          {id: "6", name:"Dormir"},
+          {id: "7", name:"Banheiro"},
+          {id: "8", name:"Brincar"},
+        ]);
+      }
 
       } catch (error) {
         console.error("Erro ao buscar símbolo:", error);
@@ -52,42 +70,49 @@ export function Symbols() {
   }
 
   return (
-    <div>
-      <h2>Symbols</h2>
+    <main className="page">
+      <section className="card">
+        <div className="back-container">
+          <button className="back-button" onClick={() => navigate("/menu")}>← Voltar ao menu</button>
+        </div>
 
-      <h3>Frase:</h3>
-      <div style={{ marginBottom: 20}}>
-        {phrase.length === 0 ? (
-          <p>Nenhum símbolo selecionado ainda.</p>
-        ) : (
-          phrase.map((symbol, index) => (
-            <span key={index} style={{ marginRight: 8 }}>
-              {symbol.name}
-            </span>
-          ))
-        )}
-      </div>
+        <div className="logo">Criar frase</div>
+        <p className="subtitle">Selecione os símbolos para montar uma mensagem</p>
 
-      <button onClick={handleSavePhrase}>Salvar frase</button>
+        <h3>Frase Montada</h3>
 
-      <h3>Lista de Símbolos</h3>
-      <div>
-        {symbols.length === 0 ? (
-          <p>Nenhum símbolo carregado.</p>
-        ) : (
-          symbols.map((symbol) => (
-            <div key={symbol.id} onClick={() => addToPhrase(symbol)} style={{
-              border: "1px solid gray",
-              padding: 10,
-              marginBottom: 10,
-              cursor: "pointer",
-            }}>
-              <p>{symbol.name}</p>
-            </div>
-          ))
-        )}
-      </div>
+        <div className="phrase-box">
+          {phrase.length === 0 ? (
+            <p>Nenhum símbolo selecionado ainda.</p>
+          ) : (
+            phrase.map((symbol, index) => (
+              <span key={index} className="chip">
+                {symbol.name}
+              </span>
+            ))
+          )}
+        </div>
 
-    </div>
+        <button className="button" onClick={handleSavePhrase}>Salvar frase</button>
+
+        <h3 style={{ marginTop: 32 }}>Símbolos disponíveis</h3>
+
+        <div className="symbol-grid">
+          {symbols.length === 0 ? (
+            <p>Nenhum símbolo carregado.</p>
+          ) : (
+            symbols.map((symbol) => (
+              <div 
+                key={symbol.id}
+                onClick={() => addToPhrase(symbol)}
+                className="symbol-card"
+              >
+                {symbol.name}
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+    </main>
   );
 }

@@ -21,22 +21,28 @@ export function Login() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <main className="page">
+      <section className="card card-small">
+        <div className="logo">Loquor Sign</div>
+        <p className="subtitle">Plataforma de apoio à comunicação alternativa</p>
 
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <input 
+          className="input"
+          placeholder="E-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)} 
+        />
 
-      <input
-        placeholder="Senha"
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input 
+          className="input"
+          placeholder="Senha"
+          type="password"
+          onChange={(e) => setPassword(e.target.value)} 
+        />
 
-      <button onClick={handleLogin}>Entrar</button>
-    </div>
+        <button className="button" onClick={handleLogin}>Entrar</button>
+      </section>
+
+    </main>
   );
 }

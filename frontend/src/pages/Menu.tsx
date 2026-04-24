@@ -4,12 +4,18 @@ export function Menu() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2>MENU</h2>
+    <main className="page">
+      <section className="card card-small">
+        <div className="logo">Loquor Sign</div>
+        <p>Escolha uma opção para continuar</p>
 
-      <button onClick={() => navigate("/symbols")} style={{ margin: 10 }}>Criar frase</button>
+        <div className="menu-actions">
+          <button className="button" onClick={() => navigate("/symbols")}>Criar frase</button>
 
-      <button onClick={() => navigate("/phrases")} style={{ margin: 10}}>Ver frases salvas</button>
-    </div>
+          <button className="button button-secondary" onClick={() => navigate("/phrases")}>Ver frases salvas</button>
+
+        </div>
+      </section>
+    </main>
   )
 }
