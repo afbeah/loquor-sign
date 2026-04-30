@@ -9,10 +9,16 @@ export const api = {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({email, password}),
-    })
+      body: JSON.stringify({ email, password }),
+    });
 
-    return response.json()
+    const data = await response.json();
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+    }
+
+    return data;
   },
 
   getSymbols: async () => {
@@ -32,11 +38,11 @@ export const api = {
   },
 
   createPhrase: async (symbolIds: string[]) => {
-    const response = await fetch("http://localhost:8080/phrases", {
+    const response = await fetch("`${API_URL}/phrase", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify({
         symbols: symbolIds, 
