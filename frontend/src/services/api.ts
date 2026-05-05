@@ -14,6 +14,10 @@ export const api = {
 
     const data = await response.json();
 
+    if (!response.ok) {
+      throw new Error(data.error || "Erro no login")
+    }
+
     if (data.token) {
       localStorage.setItem("token", data.token);
     }
@@ -38,7 +42,7 @@ export const api = {
   },
 
   createPhrase: async (symbolIds: string[]) => {
-    const response = await fetch("`${API_URL}/phrase", {
+    const response = await fetch("`${API_URL}/phrases", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

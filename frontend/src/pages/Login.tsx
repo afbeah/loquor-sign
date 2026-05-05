@@ -11,6 +11,14 @@ export function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    try {
+      await api.login(email, password);
+
+      navigate("/menu");
+    } catch (error) {
+      alert("Usuário ou senha inválidos")
+    }
+    
     const data = await api.login(email, password);
 
     console.log("Resposta:", data);
