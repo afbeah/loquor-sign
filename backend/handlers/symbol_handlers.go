@@ -11,6 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var symbols = []models.Symbol{
@@ -66,6 +67,11 @@ func CreateSymbol (c echo.Context) error{
 
 	result, err := collection.InsertOne(ctx, symbol)
 	if err != nil {
+		if mongo.IsDuplicateKeyError(err){
+			return c.JSON(http.StatusConflict, map[string]string{
+				"error": "símbolo já existe",
+			})
+		}
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": "erro ao salvar no banco",
 		})

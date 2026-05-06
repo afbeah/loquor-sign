@@ -19,9 +19,18 @@ mongod
 ```
 
 ### 🔵 2. Rodar a API
+
+#### Opção 1 - go run (pode exigir permissão no Windows)
 ```bash
 cd backend
 go run .
+```
+
+#### Opção 2 - go build (recomendado para Windows)
+```bash
+cd backend
+go build -o app.exe
+.\app.exe
 ```
 
 - A API estará disponível em:

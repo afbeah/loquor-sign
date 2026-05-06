@@ -42,7 +42,7 @@ export const api = {
   },
 
   createPhrase: async (symbolIds: string[]) => {
-    const response = await fetch("`${API_URL}/phrases", {
+    const response = await fetch(`${API_URL}/phrases`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

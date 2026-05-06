@@ -19,21 +19,14 @@ export function Symbols() {
     async function loadData() {
       try {
       const symbolsData = await api.getSymbols();
+
       console.log("Symbols:", symbolsData);
       
       if (Array.isArray(symbolsData)) {
         setSymbols(symbolsData);
       } else {
-        setSymbols([
-          {id: "1", name:"Eu"},
-          {id: "2", name:"Quero"},
-          {id: "3", name:"Estou"},
-          {id: "4", name:"Água"},
-          {id: "5", name:"Comer"},
-          {id: "6", name:"Dormir"},
-          {id: "7", name:"Banheiro"},
-          {id: "8", name:"Brincar"},
-        ]);
+        console.error("Formato inválido", symbolsData)
+        setSymbols([]);
       }
 
       } catch (error) {
