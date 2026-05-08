@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
-import { setToken } from "../utils/auth";
 
 
 export function Login() {
@@ -12,7 +11,9 @@ export function Login() {
 
   const handleLogin = async () => {
     try {
-      await api.login(email, password);
+      const data = await api.login(email, password);
+
+      console.log("Resposta:", data);
 
       navigate("/menu");
     } catch (error) {
@@ -23,7 +24,6 @@ export function Login() {
 
     console.log("Resposta:", data);
 
-    setToken(data.token);
     navigate("/symbols");
     navigate("/menu");
   };

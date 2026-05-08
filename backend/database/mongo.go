@@ -1,6 +1,7 @@
 package database
 
 import (
+	"os"
 	"context"
 	"log"
 	"time"
@@ -15,12 +16,16 @@ func Connect() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(
+		ctx, 
+		options.Client().ApplyURI(os.Getenv("MONGO_URI")),
+	)
+
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	DB = client.Database("loquor-sign")
+	DB = client.Database(os.Getenv("DB_NAME"))
 
 	log.Println("✅ Conectado ao MongoDB!")
 }

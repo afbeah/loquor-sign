@@ -1,6 +1,7 @@
 package handlers
 
 import(
+	"os"
 	"context"
 	"net/http"
 	"time"
@@ -182,7 +183,7 @@ func Login(c echo.Context) error {
 		"exp": time.Now().Add(time.Hour * 24).Unix(),
 	})
 
-	tokenString, err := token.SignedString([]byte("sua_chave_secreta"))
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": "erro ao gerar token",
