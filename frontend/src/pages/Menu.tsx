@@ -4,17 +4,22 @@ export function Menu() {
   const navigate = useNavigate();
 
   return (
-    <main className="page">
-      <section className="card card-small">
-        <div className="logo">Loquor Sign</div>
-        <p>Escolha uma opção para continuar</p>
+    <main className="menu-page">
+      <section className="card">
+        <div className="menu-logo">Loquor Sign</div>
+
+        <h1 className="menu-title">Menu Principal</h1>
+
+        <p className="menu-subtitle">Escolha uma opção para continuar</p>
 
         <div className="menu-actions">
-          <button className="button" onClick={() => navigate("/symbols")}>Criar frase</button>
+          <button className="button" onClick={() => navigate("/symbols")}>Criar Frases</button>
 
-          <button className="button button-secondary" onClick={() => navigate("/phrases")}>Ver frases salvas</button>
+          <button className="button" onClick={() => navigate()}>Voice Controller</button>
 
+          <button className="button-outline" onClick={() => navigate("/phrases")}>Ver Frases</button>
         </div>
+
       </section>
     </main>
   )

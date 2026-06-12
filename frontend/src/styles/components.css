@@ -188,3 +188,52 @@ input::placeholder {
 .divider span {
   margin: 0 1rem;
 }
+
+/* Menu */
+
+.menu-page {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2rem;
+}
+
+.menu-title {
+  color: var(--primary);
+
+  margin-bottom: 0.5rem;
+
+  text-align: center;
+}
+
+.menu-actions {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1rem;
+
+  margin-top: 2rem;
+}
+
+.menu-logo {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--primary);
+
+  text-align: center;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.menu-subtitle {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+
+  text-align: center;
+  margin-bottom: 2rem;
+}
